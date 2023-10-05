@@ -1,0 +1,26 @@
+body{
+	background-color: lavenderblush;
+}
+
+.title {
+	font-size: 200%;
+	color: darkblue;
+}
+
+.blue {
+	fill: lightblue;
+	stroke-width: 5;
+	stroke: white;
+}
+
+.pink{
+	fill: lightpink;
+	stroke-width: 5;
+	stroke: white;
+}
+
+.green{
+	fill: lightgreen;
+	stroke-width: 5;
+	stroke: white;
+}
