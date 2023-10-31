@@ -71,56 +71,74 @@ d3.csv("Visualization2Data.csv").then(
                 top: 10,
                 right: 50,
                 bottom: 45,
-                left: 20
+                left: 50
             }
         }
 
-        var xAccessor = d => d.stateabbrv //function(d) {return d.stateabbrv}
+
+        //var xAccessor = d => d.stateabbrv //function(d) {return d.stateabbrv}
         //d => d.stateabbrv
         //console.log(function(d) {return d.stateabbrv})
 
         var yAccessor = d => +d.le_agg_slope_q1_F
 
-        console.log(d => d.stateabbrv)
-        console.log(d => d.le_agg_slope_q1_F)
+        //console.log(d => d.stateabbrv)
+        //console.log(d => d.le_agg_slope_q1_F)
 
         var svg = d3.select("#scatterplot")
                     .style("width", dimensions.width)
                     .style("height", dimensions.height)
 
-        var xScale = d3.scaleLinear()
+        /*var xScale = d3.scaleLinear()
                        .domain(d3.extent(dataset, xAccessor))
                        .range([dimensions.margin.left,dimensions.width - dimensions.margin.right])
-        console.log(d3.extent(dataset, xAccessor))
+        console.log(d3.extent(dataset, xAccessor))*/
 
       var yMax = d3.max(dataset, function(d){
-            Math.max(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
+            var max = Math.max(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
                 +d.le_agg_slope_q1_M, +d.le_agg_slope_q2_M, +d.le_agg_slope_q3_M, +d.le_agg_slope_q4_M);
+
+                return max
             }
         )
+
+        console.log(yMax)
         
         var yMin = d3.min(dataset, function(d){
-            Math.min(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
+           var min = Math.min(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
                 +d.le_agg_slope_q1_M, +d.le_agg_slope_q2_M, +d.le_agg_slope_q3_M, +d.le_agg_slope_q4_M);
+
+                return min
             }
         )
 
         console.log(yMin)
 
+        var xScale = d3.scaleLinear()
+                       .domain(d3.map(dataset, d => d.stateabbrv))
+                       //.domain(d3.extent(dataset, function(d) {d.stateabbrv}))
+                       .range([dimensions.margin.left, dimensions.width - dimensions.margin.right])
+                       //.padding([0,2])
+        console.log(d3.map(dataset, d => d.stateabbrv))
+        //console.log(d3.extent(dataset, function(d) {d.stateabbrv}))
+
         var yScale = d3.scaleLinear()
-                       .domain(d3.extent(dataset, yAccessor))
+                       //.domain(d3.extent(dataset, yAccessor))
+                       .domain([yMin, yMax])
                        .range([dimensions.height - dimensions.margin.bottom, dimensions.margin.top])
-        console.log(d3.extent(dataset, yAccessor))
+        //console.log(d3.extent(dataset, yAccessor))
+        //console.log(d => xScale(d.stateabbrv))
+        console.log([yMin, yMax])
 
         var dots = svg.append("g")
-                        .selectAll("circle")
-                        .data(dataset)
-                        .enter()
-                        .append("circle")
-                        .attr("cx",d => xScale(xAccessor(d)))
-                        .attr("cy", d => yScale(yAccessor(d)))
-                        .attr("r", 3)
-                        .attr("fill", "black")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor(d)))
+                      .attr("r", 3)
+                      .attr("fill", "black")
 
         var xAxisGen = d3.axisBottom().scale(xScale)
 
