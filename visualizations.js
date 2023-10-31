@@ -1,11 +1,10 @@
-d3.csv("Visualization1Data.csv").then(
+/*d3.csv("Visualization1Data.csv").then(
 
     function(dataset){
-        console.log("working")
 
         console.log(dataset)
 
-        /*var dimensions = {
+       var dimensions = {
             width: 800,
             height: 800,
             margin: {
@@ -16,55 +15,123 @@ d3.csv("Visualization1Data.csv").then(
             }
         }
 
-        var name = dataset.columns[1]
-
-       var svg = d3.select("#barchart")
+        var svg = d3.select("#linechart")
                     .style("width", dimensions.width)
                     .style("height", dimensions.height)
 
-
         var xScale = d3.scaleLinear()
-                        .domain(d3.extent(dataset, function(d){return +d.year}))
-                        .range([dimensions.margin.left, dimensions.width - dimensions.margin.right])
-
-        console.log(d3.extent(dataset, function(d){return +d.year}))
+                       .domain(d3.extent(dataset, function(d){return +d.pctile}))
+                       .range([dimensions.margin.left, dimensions.width - dimensions.margin.right])
 
         var yScale = d3.scaleLinear()
-                       .domain([0, d3.max(d3.extent(dataset, function(d){return +d[name]}))])
+                       .domain(d3.extent(dataset, function(d){return +d.le_agg}))
                        .range([dimensions.height-dimensions.margin.bottom, dimensions.margin.top])
+        //console.log(d3.extent(dataset, function(d){return +d.le_agg}))
 
-        console.log(d3.extent(dataset, function(d){return +d[name]}))
-        console.log([0, d3.max(d3.extent(dataset, function(d){return +d[name]}))])
+        const line = d3.line()
+                        .x(d => xScale(+d.pctile))
+                        .y(d => yScale(+d.le_agg))
 
-        var bars = svg.append("g")
-                      .selectAll("rect")
-                      .data(dataset)
-                      .enter()
-                      .append("rect")
-                      .attr("x", d => xScale(+d.year))
-                      .attr("y", d => yScale(+d[name]))
-                      .attr("width", 5)
-                      .attr("height", function(d){return dimensions.height - dimensions.margin.bottom - yScale(+d[name])})
-                      .attr("fill", "pink")
+        svg.append("g")
+            .attr("transform", `translate(0,${dimensions.height - dimensions.margin.bottom})`)
+            .call(d3.axisBottom(xScale).ticks(dimensions.width / 80).tickSizeOuter(0));
+           //.attr("transform", 'translate(0, %{height - marginBottom})')
+
+        svg.append("g")
+           .attr("transform", `translate(${dimensions.margin.left},0)`)
+           .call(d3.axisLeft(yScale).ticks(dimensions.height / 40))
+           //.call(g => g.select(".domain").remove())
+           .call(g => g.selectAll(".tick line").clone()
+               .attr("x2", dimensions.width - dimensions.margin.left - dimensions.margin.right)
+               .attr("stroke-opacity", 0.1))
+           .call(g => g.append("text")
+               .attr("x", -dimensions.margin.left)
+               .attr("y", 10)
+               .attr("fill", "currentColor")
+               .attr("text-anchor", "start"));
+
+        svg.append("path")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+            .attr("d", line(dataset));
+    }  
+)*/
+
+d3.csv("Visualization2Data.csv").then(
+
+    function(dataset){
+
+        console.log(dataset)
+
+       var dimensions = {
+            width: 800,
+            height: 800,
+            margin: {
+                top: 10,
+                right: 50,
+                bottom: 45,
+                left: 20
+            }
+        }
+
+        var xAccessor = d => d.stateabbrv //function(d) {return d.stateabbrv}
+        //d => d.stateabbrv
+        //console.log(function(d) {return d.stateabbrv})
+
+        var yAccessor = d => +d.le_agg_slope_q1_F
+
+        console.log(d => d.stateabbrv)
+        console.log(d => d.le_agg_slope_q1_F)
+
+        var svg = d3.select("#scatterplot")
+                    .style("width", dimensions.width)
+                    .style("height", dimensions.height)
+
+        var xScale = d3.scaleLinear()
+                       .domain(d3.extent(dataset, xAccessor))
+                       .range([dimensions.margin.left,dimensions.width - dimensions.margin.right])
+        console.log(d3.extent(dataset, xAccessor))
+
+      var yMax = d3.max(dataset, function(d){
+            Math.max(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
+                +d.le_agg_slope_q1_M, +d.le_agg_slope_q2_M, +d.le_agg_slope_q3_M, +d.le_agg_slope_q4_M);
+            }
+        )
+        
+        var yMin = d3.min(dataset, function(d){
+            Math.min(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
+                +d.le_agg_slope_q1_M, +d.le_agg_slope_q2_M, +d.le_agg_slope_q3_M, +d.le_agg_slope_q4_M);
+            }
+        )
+
+        console.log(yMin)
+
+        var yScale = d3.scaleLinear()
+                       .domain(d3.extent(dataset, yAccessor))
+                       .range([dimensions.height - dimensions.margin.bottom, dimensions.margin.top])
+        console.log(d3.extent(dataset, yAccessor))
+
+        var dots = svg.append("g")
+                        .selectAll("circle")
+                        .data(dataset)
+                        .enter()
+                        .append("circle")
+                        .attr("cx",d => xScale(xAccessor(d)))
+                        .attr("cy", d => yScale(yAccessor(d)))
+                        .attr("r", 3)
+                        .attr("fill", "black")
 
         var xAxisGen = d3.axisBottom().scale(xScale)
-                         .ticks(28)
-                         .tickFormat(d3.format(""))
 
-        
         var xAxis = svg.append("g")
                        .call(xAxisGen)
-                       .style("transform", `translateY(${dimensions.height - dimensions.margin.bottom}px)`)
-                       .selectAll("text")
-                       .style("text-anchor", "end")
-                       .attr("dx", "-.8em")
-                       .attr("dy", ".15em")
-                       .attr("transform", "rotate(-65)");
-        
-        var yAxisGen = d3.axisRight().scale(yScale)
-                         .ticks(16)
+                       .style("transform", `translateY(${dimensions.height-dimensions.margin.bottom}px)`)
+
+        var yAxisGen = d3.axisLeft().scale(yScale)
 
         var yAxis = svg.append("g")
-                       .call(yAxisGen)*/
+                       .call(yAxisGen)
+                       .style("transform", `translateX(${dimensions.margin.left}px)`)
     }  
 )
