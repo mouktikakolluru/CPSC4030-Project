@@ -200,7 +200,7 @@ d3.csv("Visualization3Data.csv").then(
             var h = 200;
 
             var svg = d3.select("#map")
-                        .append("svg")
+                        //.append("svg")
                         .attr("width", w)
                         .attr("height", h)
     
