@@ -196,8 +196,8 @@ d3.csv("Visualization3Data.csv").then(
                 {state_le[d["statename"]] = +d["combined_le_FM"]}) 
             console.log(state_le)
 
-            var w = 400;
-            var h = 200;
+            var w = 1000;
+            var h = 1000;
 
             var svg = d3.select("#map")
                         //.append("svg")
@@ -211,7 +211,7 @@ d3.csv("Visualization3Data.csv").then(
             
             //var projection = d3.geoMercator()
     
-            var projection = d3.geoAlbersUsa().translate([w/2,h/2]).scale([500]);         
+            var projection = d3.geoAlbersUsa()//.translate([w/2,h/2]).scale([500]);         
             var path = d3.geoPath().projection(projection);
 
             var colorScale = d3.scaleLinear()
