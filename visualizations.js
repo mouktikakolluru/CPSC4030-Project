@@ -1,12 +1,12 @@
-/*d3.csv("Visualization1DataNew.csv").then(
+d3.csv("Visualization1DataNew.csv").then(
 
     function(dataset){
 
         console.log(dataset)
 
        var dimensions = {
-            width: 800,
-            height: 800,
+            width: 700,
+            height: 500,
             margin: {
                 top: 10,
                 right: 50,
@@ -40,10 +40,8 @@
         console.log(yMin)
 
         var yScale = d3.scaleLinear()
-                       //.domain(d3.extent(dataset, function(d){return +d.le_agg_F}))
                        .domain([yMin, yMax])
                        .range([dimensions.height-dimensions.margin.bottom, dimensions.margin.top])
-        //console.log(d3.extent(dataset, function(d){return +d.le_agg}))
 
         const line1 = d3.line()
                         .x(d => xScale(+d.pctile))
@@ -83,7 +81,7 @@
             .attr("stroke-width", 1.5)
             .attr("d", line2(dataset));
     }  
-)*/
+)
 
 d3.csv("Visualization2Data.csv").then(
 
@@ -92,8 +90,8 @@ d3.csv("Visualization2Data.csv").then(
         console.log(dataset)
 
        var dimensions = {
-            width: 800,
-            height: 800,
+            width: 700,
+            height: 500,
             margin: {
                 top: 10,
                 right: 50,
@@ -103,23 +101,21 @@ d3.csv("Visualization2Data.csv").then(
         }
 
 
-        //var xAccessor = d => d.stateabbrv //function(d) {return d.stateabbrv}
-        //d => d.stateabbrv
-        //console.log(function(d) {return d.stateabbrv})
-
         var yAccessor = d => +d.le_agg_slope_q1_F
-
-        //console.log(d => d.stateabbrv)
-        //console.log(d => d.le_agg_slope_q1_F)
+        var yAccessor1 = d => +d.le_agg_slope_q2_F
+        var yAccessor2 = d => +d.le_agg_slope_q3_F
+        var yAccessor3 = d => +d.le_agg_slope_q4_F
+        var yAccessor4 = d => +d.le_agg_slope_q1_M
+        var yAccessor5 = d => +d.le_agg_slope_q2_M
+        var yAccessor6 = d => +d.le_agg_slope_q3_M
+        var yAccessor7 = d => +d.le_agg_slope_q4_M
 
         var svg = d3.select("#scatterplot")
                     .style("width", dimensions.width)
                     .style("height", dimensions.height)
 
-        /*var xScale = d3.scaleLinear()
-                       .domain(d3.extent(dataset, xAccessor))
-                       .range([dimensions.margin.left,dimensions.width - dimensions.margin.right])
-        console.log(d3.extent(dataset, xAccessor))*/
+
+                    
 
       var yMax = d3.max(dataset, function(d){
             var max = Math.max(+d.le_agg_slope_q1_F, +d.le_agg_slope_q2_F, +d.le_agg_slope_q3_F, +d.le_agg_slope_q4_F,
@@ -128,6 +124,7 @@ d3.csv("Visualization2Data.csv").then(
                 return max
             }
         )
+    
 
         console.log(yMax)
         
@@ -141,23 +138,22 @@ d3.csv("Visualization2Data.csv").then(
 
         console.log(yMin)
 
-        var xScale = d3.scaleLinear()
+        var xScale = d3.scaleBand()
                        .domain(d3.map(dataset, d => d.stateabbrv))
-                       //.domain(d3.extent(dataset, function(d) {d.stateabbrv}))
                        .range([dimensions.margin.left, dimensions.width - dimensions.margin.right])
-                       //.padding([0,2])
+
         console.log(d3.map(dataset, d => d.stateabbrv))
-        //console.log(d3.extent(dataset, function(d) {d.stateabbrv}))
+
+
+
 
         var yScale = d3.scaleLinear()
-                       //.domain(d3.extent(dataset, yAccessor))
                        .domain([yMin, yMax])
                        .range([dimensions.height - dimensions.margin.bottom, dimensions.margin.top])
-        //console.log(d3.extent(dataset, yAccessor))
-        //console.log(d => xScale(d.stateabbrv))
+      
         console.log([yMin, yMax])
 
-        var dots = svg.append("g")
+        var f_q1 = svg.append("g")
                       .selectAll("circle")
                       .data(dataset)
                       .enter()
@@ -165,13 +161,87 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor(d)))
                       .attr("r", 3)
-                      .attr("fill", "black")
+                      .attr("fill", "red")
+
+        var f_q2 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor1(d)))
+                      .attr("r", 3)
+                      .attr("fill", "red")
+
+        var f_q3 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor2(d)))
+                      .attr("r", 3)
+                      .attr("fill", "red")
+
+        var f_q4 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor3(d)))
+                      .attr("r", 3)
+                      .attr("fill", "red")
+
+        var m_q1 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor4(d)))
+                      .attr("r", 3)
+                      .attr("fill", "blue")
+
+        var m_q2 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor5(d)))
+                      .attr("r", 3)
+                      .attr("fill", "blue")
+
+        var m_q3 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor6(d)))
+                      .attr("r", 3)
+                      .attr("fill", "blue")
+
+        var m_q4 = svg.append("g")
+                      .selectAll("circle")
+                      .data(dataset)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", d => xScale(d.stateabbrv))
+                      .attr("cy", d => yScale(yAccessor7(d)))
+                      .attr("r", 3)
+                      .attr("fill", "blue")
+
+
 
         var xAxisGen = d3.axisBottom().scale(xScale)
 
+
         var xAxis = svg.append("g")
                        .call(xAxisGen)
-                       .style("transform", `translateY(${dimensions.height-dimensions.margin.bottom}px)`)
+                       .style("transform", `translateY(${(dimensions.height-271)}px)`)
+
 
         var yAxisGen = d3.axisLeft().scale(yScale)
 
@@ -181,10 +251,10 @@ d3.csv("Visualization2Data.csv").then(
     }  
 )
 
+
 d3.csv("Visualization3Data.csv").then(
 
     function(dataset){
-        //console.log(dataset)
 
         d3.json("us_states.json").then(function(mapdata){
 
@@ -196,83 +266,30 @@ d3.csv("Visualization3Data.csv").then(
                 {state_le[d["statename"]] = +d["combined_le_FM"]}) 
             console.log(state_le)
 
-            var w = 1000;
+            var w = 1400;
             var h = 1000;
 
             var svg = d3.select("#map")
-                        //.append("svg")
                         .attr("width", w)
                         .attr("height", h)
     
-            /*var svg = d3.select("body")
-                        .append("svg")
-                        .attr("width", w)
-                        .attr("height",h);*/
-            
-            //var projection = d3.geoMercator()
-    
-            var projection = d3.geoAlbersUsa()//.translate([w/2,h/2]).scale([500]);         
+            var projection = d3.geoAlbersUsa()        
             var path = d3.geoPath().projection(projection);
 
             var colorScale = d3.scaleLinear()
-                               .domain([d3.min(Object.values(state_le)), 0, d3.max(Object.values(state_le))])
-                               .range(["white", "red"])
+                               .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
+                               .range(["lightblue", "blue"])
+
+            var mapGroup = svg.append("g")
+    .attr("transform", "translate(" + w / 5 + "," + h / 120 + ")");
             
-            var states = svg.append("g")
-                               .selectAll(".state")
+            var states = mapGroup.selectAll(".state")
                                .data(mapdata.features)
                                .enter()
-                               //.append("class", "state")
-                               //.attr("d", d => path(d))
                                .append("path")
-                               .attr("d",path)
-                               .attr("fill", d => colorScale(+state_le[d.properties.ADM0_A3]))
-    
-            /*d3.json("us_states.json", function(json){
-    
-                svg.selectAll("path")
-                    .data(json.features)
-                    .enter()
-                    .append("path")
-                    .attr("d",path)
-                    .style("fill","teal");
-            });*/
-
-            /*var size = 800
-
-            var svg = d3.select("#map").attr("width", size)
-                                      .attr("height", size/2)
-            
-            var projection = d3.geoMercator() //geoOrthographic() //geoMercator()
-                               .fitWidth(size, {type: "Sphere"})
-
-            var pathGenerator = d3.geoPath(projection)
-
-            //background of map
-            var earth = svg.append("path")
-                           .attr("d", pathGenerator({type: "Sphere"}))
-                           .attr("stroke", "gray")
-                           .attr("fill", "white")
-            
-            //gives grid
-            /*var graticule = avg.append("path")
-                               .attr("d", pathGenerator(d3.geoGraticule10()))
-                               .attr("stroke","gray")
-                               .attr("fill", "none")
-            
-            var colorScale = d3.scaleLinear()
-                               .domain([d3.min(Object.values(state_le)), 0, d3.max(Object.values(state_le))])
-                               .range(["white", "red"])
-            
-            var countries = svg.append("g")
-                               .selectAll(".state")
-                               .data(mapdata.features)
-                               .enter()
-                               .append("class", "state")
-                               .attr("d", d => pathGenerator(d))
-                               //.attr("fill", d => colorScale(+state_le[d.properties.ADM0_A3]))*/
-
+                               .attr("class", "state")
+                               .attr("d", d => path(d))
+                               .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
         })
-
     }  
 )
