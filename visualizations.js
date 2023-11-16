@@ -6,7 +6,7 @@ d3.csv("Visualization1DataNew.csv").then(
 
        var dimensions = {
             width: 700,
-            height: 500,
+            height: 350,
             margin: {
                 top: 10,
                 right: 50,
@@ -90,8 +90,8 @@ d3.csv("Visualization2Data.csv").then(
         console.log(dataset)
 
        var dimensions = {
-            width: 700,
-            height: 500,
+            width: 1400,
+            height: 400,
             margin: {
                 top: 10,
                 right: 50,
@@ -240,7 +240,7 @@ d3.csv("Visualization2Data.csv").then(
 
         var xAxis = svg.append("g")
                        .call(xAxisGen)
-                       .style("transform", `translateY(${(dimensions.height-271)}px)`)
+                       .style("transform", `translateY(${(dimensions.height-150)}px)`)
 
 
         var yAxisGen = d3.axisLeft().scale(yScale)
@@ -250,7 +250,6 @@ d3.csv("Visualization2Data.csv").then(
                        .style("transform", `translateX(${dimensions.margin.left}px)`)
     }  
 )
-
 
 d3.csv("Visualization3Data.csv").then(
 
@@ -266,14 +265,17 @@ d3.csv("Visualization3Data.csv").then(
                 {state_le[d["statename"]] = +d["combined_le_FM"]}) 
             console.log(state_le)
 
-            var w = 1400;
-            var h = 1000;
+            var w = 700;
+            var h = 350;
 
             var svg = d3.select("#map")
                         .attr("width", w)
                         .attr("height", h)
     
-            var projection = d3.geoAlbersUsa()        
+            var projection = d3.geoAlbersUsa()  
+            .translate([w/3 , h/2]) // Adjust these values
+    .scale([w]);  
+            
             var path = d3.geoPath().projection(projection);
 
             var colorScale = d3.scaleLinear()
@@ -281,7 +283,7 @@ d3.csv("Visualization3Data.csv").then(
                                .range(["lightblue", "blue"])
 
             var mapGroup = svg.append("g")
-    .attr("transform", "translate(" + w / 5 + "," + h / 120 + ")");
+                              .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
             
             var states = mapGroup.selectAll(".state")
                                .data(mapdata.features)
