@@ -72,14 +72,29 @@ d3.csv("Visualization1DataNew.csv").then(
             .attr("fill", "none")
             .attr("stroke", "red")
             .attr("stroke-width", 1.5)
-            .attr("d", line1(dataset));
-            //.attr("d", line2(dataset));
+            .attr("d", line1(dataset))
+            .on('mouseover', function(d){
+                d3.select(this)
+                  .style("stroke-width", 4.0)
+               })
+               .on('mouseout', function(d){
+                d3.select(this)
+                  .style("stroke-width", 1.5)
+               })
 
         svg.append("path")
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)
-            .attr("d", line2(dataset));
+            .attr("d", line2(dataset))
+            .on('mouseover', function(d){
+                d3.select(this)
+                  .style("stroke-width", 4.0)
+               })
+               .on('mouseout', function(d){
+                d3.select(this)
+                  .style("stroke-width", 1.5)
+               })
     }  
 )
 
@@ -160,8 +175,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "red")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var f_q2 = svg.append("g")
                       .selectAll("circle")
@@ -170,8 +199,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor1(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "red")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var f_q3 = svg.append("g")
                       .selectAll("circle")
@@ -180,8 +223,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor2(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "red")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var f_q4 = svg.append("g")
                       .selectAll("circle")
@@ -190,8 +247,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor3(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "red")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var m_q1 = svg.append("g")
                       .selectAll("circle")
@@ -200,8 +271,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor4(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "blue")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var m_q2 = svg.append("g")
                       .selectAll("circle")
@@ -210,8 +295,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor5(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "blue")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var m_q3 = svg.append("g")
                       .selectAll("circle")
@@ -220,8 +319,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor6(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "blue")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
         var m_q4 = svg.append("g")
                       .selectAll("circle")
@@ -230,8 +343,22 @@ d3.csv("Visualization2Data.csv").then(
                       .append("circle")
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor7(d)))
-                      .attr("r", 3)
+                      .attr("r", 4)
                       .attr("fill", "blue")
+                      .attr("stroke", "black")
+                      .style("stroke-width", 0.25)
+                      .on('mouseover', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 2.0)
+                          .attr("r", 6)
+                       })
+                       .on('mouseout', function(d){
+                        d3.select(this)
+                          .attr("stroke", "black")
+                          .style("stroke-width", 0.25)
+                          .attr("r", 4)
+                       })
 
 
 
@@ -241,6 +368,13 @@ d3.csv("Visualization2Data.csv").then(
         var xAxis = svg.append("g")
                        .call(xAxisGen)
                        .style("transform", `translateY(${(dimensions.height-150)}px)`)
+                    //    .append("text")
+                    //    .attr("class", "x label")
+                    //    .attr("text-anchor", "end")
+                    //    .attr("x", width)
+                    //    .attr("y", height - 6)
+                    //    //.text("income per capita, inflation-adjusted (dollars)")
+                    //    .text("State Abbreviation")
 
 
         var yAxisGen = d3.axisLeft().scale(yScale)
@@ -248,6 +382,7 @@ d3.csv("Visualization2Data.csv").then(
         var yAxis = svg.append("g")
                        .call(yAxisGen)
                        .style("transform", `translateX(${dimensions.margin.left}px)`)
+                       //.text("State-level Estimates of Trends in Life Expectancy")
     }  
 )
 
@@ -273,8 +408,8 @@ d3.csv("Visualization3Data.csv").then(
                         .attr("height", h)
     
             var projection = d3.geoAlbersUsa()  
-            .translate([w/3 , h/2]) // Adjust these values
-    .scale([w]);  
+                               .translate([w/3 , h/2]) // Adjust these values
+                               .scale([w]);  
             
             var path = d3.geoPath().projection(projection);
 
@@ -292,6 +427,18 @@ d3.csv("Visualization3Data.csv").then(
                                .attr("class", "state")
                                .attr("d", d => path(d))
                                .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
+                               .attr("stroke", "black")
+                               .style("stroke-width", 0.3)
+                               .on('mouseover', function(d){
+                                d3.select(this)
+                                  .attr("stroke", "black")
+                                  .style("stroke-width", 2.0)
+                               })
+                               .on('mouseout', function(d){
+                                d3.select(this)
+                                  .attr("stroke", "black")
+                                  .style("stroke-width", 0.3)
+                               })
         })
     }  
 )
