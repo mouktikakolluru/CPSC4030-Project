@@ -51,13 +51,7 @@ d3.csv("Visualization1DataNew.csv").then(
         const line2 = d3.line()
                         .x(d => xScale(+d.pctile))
                         .y(d => yScale(+d.le_agg_M))
-                        //.attr("id", "line_m")
-        
-        // var tooltip = d3.select("#linechart")
-        //                 .append("div")
-        //                 .style("position", "absolute")
-        //                 .style("visibility", "hidden")
-        //                 .text("I'm a circle!");
+
 
         svg.append("g")
             .attr("transform", `translate(0,${dimensions.height - dimensions.margin.bottom})`)
@@ -78,7 +72,7 @@ d3.csv("Visualization1DataNew.csv").then(
         svg.append("path")
             .attr("id", "line_f")
             .attr("fill", "none")
-            .attr("stroke", "red")
+            .attr("stroke", "#FF7276")
             .attr("stroke-width", 1.5)
             .attr("d", line1(dataset))
             .on('mouseover', function(d){
@@ -90,24 +84,20 @@ d3.csv("Visualization1DataNew.csv").then(
                 d3.select(this)
                   .style("stroke-width", 1.5)
             })
-            // .on('click', function(d){
-            //     d3.select("#line_f")
-            //       .style("stroke-width", 4.0)
-            // })
             .on('click', function(event, d){
               let gender = "F"
               const xCoor = d3.pointer(event)[0];
             update_map(xCoor, gender)
-            console.log('you clicked female')
-            //d3.selectAll(".state")//.attr("fill", d => colorScale(+state_le[d.properties.NAME]))
+            updateScatterplotFromLineChart(xCoor, gender)
+            }
+          )
 
-            })
             //.on('click', update_map_f(d))
 
         svg.append("path")
             .attr("id", "line_m")
             .attr("fill", "none")
-            .attr("stroke", "steelblue")
+            .attr("stroke", "#0096FF")
             .attr("stroke-width", 1.5)
             .attr("d", line2(dataset))
             .on('mouseover', function(d){
@@ -122,9 +112,7 @@ d3.csv("Visualization1DataNew.csv").then(
               let gender = "M"
               const xCoor = d3.pointer(event)[0];
             update_map(xCoor, gender)
-            console.log('you clicked male')
-            //d3.selectAll(".state")//.attr("fill", d => colorScale(+state_le[d.properties.NAME]))
-
+            updateScatterplotFromLineChart(xCoor, gender)
             })
 
   }  
@@ -202,7 +190,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor(d)))
                       .attr("r", 4)
-                      .attr("fill", "red")
+                      .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -227,7 +215,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor1(d)))
                       .attr("r", 4)
-                      .attr("fill", "red")
+                      .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -252,7 +240,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor2(d)))
                       .attr("r", 4)
-                      .attr("fill", "red")
+                      .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -277,7 +265,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor3(d)))
                       .attr("r", 4)
-                      .attr("fill", "red")
+                      .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -302,7 +290,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor4(d)))
                       .attr("r", 4)
-                      .attr("fill", "blue")
+                      .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -327,7 +315,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor5(d)))
                       .attr("r", 4)
-                      .attr("fill", "blue")
+                      .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -352,7 +340,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor6(d)))
                       .attr("r", 4)
-                      .attr("fill", "blue")
+                      .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -377,7 +365,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cx", d => xScale(d.stateabbrv))
                       .attr("cy", d => yScale(yAccessor7(d)))
                       .attr("r", 4)
-                      .attr("fill", "blue")
+                      .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
                       .on('mouseover', function(d){
@@ -398,36 +386,13 @@ d3.csv("Visualization2Data.csv").then(
         var xAxis = svg.append("g")
                        .call(xAxisGen)
                        .style("transform", `translateY(${(dimensions.height-150)}px)`)
-                    //    .append("text")
-                    //    .attr("class", "x label")
-                    //    .attr("text-anchor", "end")
-                    //    .attr("x", width)
-                    //    .attr("y", height - 6)
-                    //    //.text("income per capita, inflation-adjusted (dollars)")
-                    //    .text("State Abbreviation")
-
+    
 
         var yAxisGen = d3.axisLeft().scale(yScale)
 
         var yAxis = svg.append("g")
                        .call(yAxisGen)
                        .style("transform", `translateX(${dimensions.margin.left}px)`)
-                       //.text("State-level Estimates of Trends in Life Expectancy")
-        // d3.select("#q1_f").on('click', function(){
-        //   console.log('clicked')
-        //   dataset.filter(function(d) {
-        //     if (d.id != "point_f_q1"){
-        //       d3.select(this)
-        //         .style("opacity", 1.0)
-        //     }
-        //     else{
-        //       d3.select(this)
-        //         .attr("stroke", "black")
-        //         .style("stroke-width", 2.0)
-        //         .attr("r", 6)
-        //     }
-        //   })
-      //})
     }  
 )
 
@@ -460,7 +425,7 @@ d3.csv("Visualization3Data.csv").then(
 
             var colorScale = d3.scaleLinear()
                                .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
-                               .range(["#e4c6ca", "purple"])
+                               .range(["white", "#355E3B"])
 
             var mapGroup = svg.append("g")
                               .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
@@ -498,10 +463,6 @@ function update_map(xCoor, gender){
       var state_le = {}
 
         d3.json("us_states.json").then(function(mapdata){
-          console.log(gender)
-          console.log(xCoor)
-            //console.log(dataset)
-            //console.log(mapdata)
           if (gender == "F"){
             if (xCoor < 160) {
               dataset.forEach(d => 
@@ -588,7 +549,88 @@ function update_map(xCoor, gender){
                                   .attr("stroke", "black")
                                   .style("stroke-width", 0.3)
                                })
+                               .on('click', function(d){
+                                  updateScatterplotFromMap()
+                               })
         })
     }  
   )
+  }
+
+  function updateScatterplotFromLineChart(xCoor, gender){
+         if (gender == "F"){
+            d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4")
+              .attr("fill-opacity", ".15")
+
+            if (xCoor < 160) {
+              // d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q2, #point_f_q3, #point_f_q4")
+              //   .style("stroke-width", 0.25)
+              //   .attr("r", 4)
+              d3.select("#point_f_q1")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+            else if (xCoor < 347 && xCoor >= 160) {
+              // d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q3, #point_f_q4")
+              //   .style("stroke-width", 0.25)
+              //   .attr("r", 4)
+              d3.select("#point_f_q2")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+            else if (xCoor < 497 && xCoor >= 347) {
+              d3.select("#point_f_q3")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+            else if (xCoor < 649 && xCoor >= 497) {
+              d3.select("#point_f_q4")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+          }
+
+          if (gender == "M"){
+            if (xCoor < 160) {
+                d3.select("#point_m_q1")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+            else if (xCoor < 347 && xCoor >= 160) {
+              d3.select("#point_m_q2")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+            else if (xCoor < 497 && xCoor >= 347) {
+              d3.select("#point_m_q3")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+            else if (xCoor < 649 && xCoor >= 497) {
+              d3.select("#point_m_q4")
+                .selectAll("circle")
+                .attr("stroke", "#36454F")
+                .attr("r", 5.5)
+                .style("stroke-width", "1.5")
+            }
+          }
+      
+  }
+
+  function updateScatterplotFromMap(){
+
   }
