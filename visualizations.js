@@ -113,7 +113,37 @@ d3.csv("Visualization1DataNew.csv").then(
               const xCoor = d3.pointer(event)[0];
             update_map(xCoor, gender)
             updateScatterplotFromLineChart(xCoor, gender)
+
             })
+
+            svg.append("text")
+           .attr("class", "x label")
+           .attr("text-anchor", "middle")
+           .attr("x", dimensions.width - 350)
+           .attr("y", dimensions.height - 10)
+           .text("Income Percentile")
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .attr("y", 10)
+            .attr("x", -150)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text("Average Lifespan [years]");
+
+          svg.selectAll(".vertical-line")
+            .data([25, 50, 75, 100])
+            .enter().append("line")
+            .attr("class", "vertical-line")
+            .attr("x1", d => xScale(d))
+            .attr("y1", dimensions.margin.top)
+            .attr("x2", d => xScale(d))
+            .attr("y2", dimensions.height - dimensions.margin.bottom)
+            .attr("stroke", "gray")
+            .attr("stroke-opacity", .3);
+
+      
 
   }  
 )
@@ -416,16 +446,18 @@ d3.csv("Visualization3Data.csv").then(
             var svg = d3.select("#map")
                         .attr("width", w)
                         .attr("height", h)
+              
+
     
             var projection = d3.geoAlbersUsa()  
-                               .translate([w/3 , h/2]) // Adjust these values
+                               .translate([w/3 , h/2])
                                .scale([w]);  
             
             var path = d3.geoPath().projection(projection);
 
             var colorScale = d3.scaleLinear()
                                .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
-                               .range(["white", "#355E3B"])
+                               .range(["lightgreen", "#355E3B"])
 
             var mapGroup = svg.append("g")
                               .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
@@ -435,6 +467,7 @@ d3.csv("Visualization3Data.csv").then(
                                .data(mapdata.features)
                                .enter()
                                .append("path")
+                               //introduce attr
                                .attr("class", "state")
                                .attr("d", d => path(d))
                                .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
@@ -451,6 +484,7 @@ d3.csv("Visualization3Data.csv").then(
                                   .style("stroke-width", 0.3)
                                })
         })
+
     }  
 )
 
@@ -463,22 +497,32 @@ function update_map(xCoor, gender){
       var state_le = {}
 
         d3.json("us_states.json").then(function(mapdata){
+          var titleText = "Life Expectancy by State";
+
           if (gender == "F"){
             if (xCoor < 160) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q1_F"]}) 
+
+            titleText = "Life Expectancy for Q1 in Females";
             }
             else if (xCoor < 347 && xCoor >= 160) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q2_F"]}) 
+
+            titleText = "Life Expectancy for Q2 in Females";
             }
             else if (xCoor < 497 && xCoor >= 347) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q3_F"]}) 
+
+            titleText = "Life Expectancy for Q3 in Females";
             }
             else if (xCoor < 649 && xCoor >= 497) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q4_F"]}) 
+
+            titleText = "Life Expectancy for Q4 in Females";
             }
           }
 
@@ -486,20 +530,31 @@ function update_map(xCoor, gender){
             if (xCoor < 160) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q1_M"]}) 
+
+            titleText = "Life Expectancy for Q1 in Males";
             }
             else if (xCoor < 347 && xCoor >= 160) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q2_M"]}) 
+
+            titleText = "Life Expectancy for Q2 in Males";
             }
             else if (xCoor < 497 && xCoor >= 347) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q3_M"]}) 
+
+            titleText = "Life Expectancy for Q3 in Males";
             }
             else if (xCoor < 649 && xCoor >= 497) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q4_M"]}) 
+
+            titleText = "Life Expectancy for Q4 in Males";
             }
           }
+
+           d3.select("#map-title")
+            .text(titleText);
   
             var w = 700;
             var h = 350;
@@ -509,7 +564,7 @@ function update_map(xCoor, gender){
                         .attr("height", h)
     
             var projection = d3.geoAlbersUsa()  
-                               .translate([w/3 , h/2]) // Adjust these values
+                               .translate([w/3 , h/2])
                                .scale([w]);  
             
             var path = d3.geoPath().projection(projection);
@@ -558,29 +613,32 @@ function update_map(xCoor, gender){
   }
 
   function updateScatterplotFromLineChart(xCoor, gender){
+
+    d3.selectAll("circle")
+    .attr("stroke", null)  
+    .attr("r", 4)        
+    .style("stroke-width", 0.25);  
+
          if (gender == "F"){
             d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4")
               .attr("fill-opacity", ".15")
 
             if (xCoor < 160) {
-              // d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q2, #point_f_q3, #point_f_q4")
-              //   .style("stroke-width", 0.25)
-              //   .attr("r", 4)
+              
               d3.select("#point_f_q1")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
             }
             else if (xCoor < 347 && xCoor >= 160) {
-              // d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q3, #point_f_q4")
-              //   .style("stroke-width", 0.25)
-              //   .attr("r", 4)
               d3.select("#point_f_q2")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
             }
             else if (xCoor < 497 && xCoor >= 347) {
               d3.select("#point_f_q3")
@@ -628,9 +686,12 @@ function update_map(xCoor, gender){
                 .style("stroke-width", "1.5")
             }
           }
+
       
   }
 
   function updateScatterplotFromMap(){
 
   }
+
+
