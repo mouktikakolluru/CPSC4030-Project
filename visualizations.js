@@ -2,8 +2,6 @@ d3.csv("Visualization1DataNew.csv").then(
 
     function(dataset){
 
-        //console.log(dataset)
-
        var dimensions = {
             width: 700,
             height: 350,
@@ -28,8 +26,6 @@ d3.csv("Visualization1DataNew.csv").then(
                 return max
                 }
         )
-
-        //console.log(yMax)
         
         var yMin = d3.min(dataset, function(d){
             var min = Math.min(+d.le_agg_F, +d.le_agg_M);
@@ -37,7 +33,6 @@ d3.csv("Visualization1DataNew.csv").then(
             }
         )
             
-        //console.log(yMin)
 
         var yScale = d3.scaleLinear()
                        .domain([yMin, yMax])
@@ -46,7 +41,6 @@ d3.csv("Visualization1DataNew.csv").then(
         const line1 = d3.line()
                         .x(d => xScale(+d.pctile))
                         .y(d => yScale(+d.le_agg_F))
-                        //.attr("id", "line_f")
 
         const line2 = d3.line()
                         .x(d => xScale(+d.pctile))
@@ -92,7 +86,6 @@ d3.csv("Visualization1DataNew.csv").then(
             }
           )
 
-            //.on('click', update_map_f(d))
 
         svg.append("path")
             .attr("id", "line_m")
@@ -152,8 +145,6 @@ d3.csv("Visualization2Data.csv").then(
 
     function(dataset){
 
-        //console.log(dataset)
-
        var dimensions = {
             width: 1400,
             height: 400,
@@ -197,19 +188,15 @@ d3.csv("Visualization2Data.csv").then(
             }
         )
 
-        //console.log(yMin)
-
         var xScale = d3.scaleBand()
                        .domain(d3.map(dataset, d => d.stateabbrv))
                        .range([dimensions.margin.left, dimensions.width - dimensions.margin.right])
 
-        //console.log(d3.map(dataset, d => d.stateabbrv))
 
         var yScale = d3.scaleLinear()
                        .domain([yMin, yMax])
                        .range([dimensions.height - dimensions.margin.bottom, dimensions.margin.top])
-      
-        //console.log([yMin, yMax])
+    
 
         var f_q1 = svg.append("g")
                       .attr("id", "point_f_q1")
@@ -223,6 +210,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -248,6 +236,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -273,6 +262,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -298,6 +288,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#FF7276")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -323,6 +314,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -348,6 +340,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -373,6 +366,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -398,6 +392,7 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("fill", "#0096FF")
                       .attr("stroke", "black")
                       .style("stroke-width", 0.25)
+                      .style("transform", "translateX(13px)")
                       .on('mouseover', function(d){
                         d3.select(this)
                           .attr("stroke", "black")
@@ -432,13 +427,10 @@ d3.csv("Visualization3Data.csv").then(
 
         d3.json("us_states.json").then(function(mapdata){
 
-            //console.log(dataset)
-            //console.log(mapdata)
 
             var state_le = {}
             dataset.forEach(d => 
-                {state_le[d["statename"]] = +d["combined_le_FM"]}) 
-            //console.log(state_le)
+                {state_le[d["statename"]] = +d["combined_le_FM"]})
 
             var w = 700;
             var h = 350;
@@ -458,6 +450,17 @@ d3.csv("Visualization3Data.csv").then(
             var colorScale = d3.scaleLinear()
                                .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
                                .range(["lightgreen", "#355E3B"])
+
+            var colorLegend = d3.legendColor()
+                                .labelFormat(d3.format(".0f"))
+                                .scale(colorScale)
+                                .shapePadding(5)
+                                .shapeWidth(50)
+                                .shapeHeight(20)
+                                .labelOffset(12);
+            svg.append("g")
+                .attr("transform", "translate(10, 10)")
+                .call(colorLegend);
 
             var mapGroup = svg.append("g")
                               .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
@@ -572,7 +575,7 @@ function update_map(xCoor, gender){
             if (gender == "F"){
               var colorScale = d3.scaleLinear()
                                  .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
-                                 .range(["white", "red"])
+                                 .range(["#fae7e8", "red"])
             }
 
             if (gender == "M"){
@@ -580,6 +583,24 @@ function update_map(xCoor, gender){
                                  .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
                                  .range(["lightblue", "blue"])
             }
+
+            svg.append('rect')
+               .attr('x', 0)
+               .attr('y', 0)
+               .attr('width', 90)
+               .attr('height', 300)
+               .attr('fill', 'white');
+            
+            var colorLegend = d3.legendColor()
+                                .labelFormat(d3.format(".0f"))
+                                .scale(colorScale)
+                                .shapePadding(5)
+                                .shapeWidth(50)
+                                .shapeHeight(20)
+                                .labelOffset(12);
+            svg.append("g")
+                .attr("transform", "translate(10, 10)")
+                .call(colorLegend);
   
             var mapGroup = svg.append("g")
                               .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
@@ -617,7 +638,7 @@ function update_map(xCoor, gender){
     d3.selectAll("circle")
     .attr("stroke", null)  
     .attr("r", 4)        
-    .style("stroke-width", 0.25);  
+    .style("stroke-width", 0.25)
 
          if (gender == "F"){
             d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4")
@@ -630,7 +651,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-
+                //.attr("fill-opacity", 1)
             }
             else if (xCoor < 347 && xCoor >= 160) {
               d3.select("#point_f_q2")
@@ -638,7 +659,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-
+                //.attr("fill-opacity", 1)
             }
             else if (xCoor < 497 && xCoor >= 347) {
               d3.select("#point_f_q3")
@@ -646,6 +667,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+                //.attr("fill-opacity", 1)
             }
             else if (xCoor < 649 && xCoor >= 497) {
               d3.select("#point_f_q4")
@@ -653,16 +675,22 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+                //.attr("fill-opacity", 1)
             }
           }
 
+
           if (gender == "M"){
+            d3.selectAll("#point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+              .attr("fill-opacity", ".15")
+
             if (xCoor < 160) {
                 d3.select("#point_m_q1")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+                //.attr("fill-opacity", 1)
             }
             else if (xCoor < 347 && xCoor >= 160) {
               d3.select("#point_m_q2")
@@ -670,6 +698,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+                //.attr("fill-opacity", 1)
             }
             else if (xCoor < 497 && xCoor >= 347) {
               d3.select("#point_m_q3")
@@ -677,6 +706,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+                //.attr("fill-opacity", 1)
             }
             else if (xCoor < 649 && xCoor >= 497) {
               d3.select("#point_m_q4")
@@ -684,6 +714,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+                //.attr("fill-opacity", 1)
             }
           }
 
@@ -693,5 +724,4 @@ function update_map(xCoor, gender){
   function updateScatterplotFromMap(){
 
   }
-
 
