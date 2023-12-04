@@ -91,6 +91,10 @@ d3.csv("Visualization1DataNew.csv").then(
               line_m_clicked = false
             update_map(xCoor, gender)
             updateScatterplotFromLineChart(xCoor, gender)
+            d3.select(this)
+              .style("stroke-width", 4.0)
+            d3.select("#line_m")
+              .style("stroke-width", 1.5)
             }
           )
 
@@ -119,7 +123,10 @@ d3.csv("Visualization1DataNew.csv").then(
               line_m_clicked = true
             update_map(xCoor, gender)
             updateScatterplotFromLineChart(xCoor, gender)
-
+            d3.select(this)
+            .style("stroke-width", 4.0)
+          d3.select("#line_f")
+            .style("stroke-width", 1.5)
             })
 
             svg.append("text")
@@ -235,6 +242,12 @@ d3.csv("Visualization2Data.csv").then(
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
                        })
+                       .on('click', function(d){
+                        gender = 'F'
+                        quartile = 1
+                        updateLineChartFromScatterPlot(gender, quartile)
+                       })
+
 
        var f_q2 = svg.append("g")
                       .attr("id", "point_f_q2")
@@ -261,6 +274,12 @@ d3.csv("Visualization2Data.csv").then(
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
                        })
+                       .on('click', function(d){
+                        gender = 'F'
+                        quartile = 2
+                        updateLineChartFromScatterPlot(gender, quartile)
+                       })
+
 
         var f_q3 = svg.append("g")
                       .attr("id", "point_f_q3")
@@ -286,6 +305,11 @@ d3.csv("Visualization2Data.csv").then(
                           .attr("stroke", "black")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                       })
+                       .on('click', function(d){
+                        gender = 'F'
+                        quartile = 3
+                        updateLineChartFromScatterPlot(gender, quartile)
                        })
 
         var f_q4 = svg.append("g")
@@ -313,6 +337,11 @@ d3.csv("Visualization2Data.csv").then(
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
                        })
+                       .on('click', function(d){
+                        gender = 'F'
+                        quartile = 4
+                        updateLineChartFromScatterPlot(gender, quartile)
+                       })
 
         var m_q1 = svg.append("g")
                       .attr("id", "point_m_q1")
@@ -338,6 +367,11 @@ d3.csv("Visualization2Data.csv").then(
                           .attr("stroke", "black")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                       })
+                       .on('click', function(d){
+                        gender = 'M'
+                        quartile = 1
+                        updateLineChartFromScatterPlot(gender, quartile)
                        })
 
         var m_q2 = svg.append("g")
@@ -365,6 +399,11 @@ d3.csv("Visualization2Data.csv").then(
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
                        })
+                       .on('click', function(d){
+                        gender = 'M'
+                        quartile = 2
+                        updateLineChartFromScatterPlot(gender, quartile)
+                       })
 
         var m_q3 = svg.append("g")
                       .attr("id", "point_m_q3")
@@ -391,6 +430,12 @@ d3.csv("Visualization2Data.csv").then(
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
                        })
+                       .on('click', function(d){
+                        gender = 'M'
+                        quartile = 3
+                        updateLineChartFromScatterPlot(gender, quartile)
+                       })
+
 
         var m_q4 = svg.append("g")
                       .attr("id", "point_m_q4")
@@ -416,6 +461,11 @@ d3.csv("Visualization2Data.csv").then(
                           .attr("stroke", "black")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                       })
+                       .on('click', function(d){
+                        gender = 'M'
+                        quartile = 4
+                        updateLineChartFromScatterPlot(gender, quartile)
                        })
 
         var xAxisGen = d3.axisBottom().scale(xScale)
@@ -766,3 +816,53 @@ function update_map(xCoor, gender){
       //d3.selectAll()
   }
 
+  function updateLineChartFromScatterPlot(gender, quartile){
+    if (gender == 'F'){
+      d3.select("#line_f")
+        .style("stroke-width", 4.0)
+      
+      d3.select("#line_m")
+        .style("stroke-width", 1.5)
+      // if (quartile == 1)
+      // {
+      //   d3.select("#line_f")
+      // }
+      // if (quartile == 2)
+      // {
+      //   d3.select("#line_f")
+      // }
+      // if (quartile == 3)
+      // {
+      //   d3.select("#line_f")
+      // }
+      // if (quartile == 4)
+      // {
+      //   d3.select("#line_f")
+      // }
+
+    }
+
+    if (gender == 'M'){
+      d3.select("#line_m")
+        .style("stroke-width", 4.0)
+
+      d3.select("#line_f")
+        .style("stroke-width", 1.5)
+      // if (quartile == 1)
+      // {
+      //   d3.select("#line_m")
+      // }
+      // if (quartile == 2)
+      // {
+      //   d3.select("#line_m")
+      // }
+      // if (quartile == 3)
+      // {
+      //   d3.select("#line_m")
+      // }
+      // if (quartile == 4)
+      // {
+      //   d3.select("#line_m")
+      // }
+    }
+  }
