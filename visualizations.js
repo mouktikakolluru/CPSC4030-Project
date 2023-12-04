@@ -1,3 +1,6 @@
+let line_f_clicked = false
+let line_m_clicked = false
+
 d3.csv("Visualization1DataNew.csv").then(
 
     function(dataset){
@@ -75,12 +78,17 @@ d3.csv("Visualization1DataNew.csv").then(
                 //tooltip.style("visibility", "visible")
                })
             .on('mouseout', function(d){
-                d3.select(this)
+                 if (line_f_clicked == false)
+                {
+                  d3.select(this)
                   .style("stroke-width", 1.5)
+                }
             })
             .on('click', function(event, d){
               let gender = "F"
               const xCoor = d3.pointer(event)[0];
+              line_f_clicked = true
+              line_m_clicked = false
             update_map(xCoor, gender)
             updateScatterplotFromLineChart(xCoor, gender)
             }
@@ -98,12 +106,17 @@ d3.csv("Visualization1DataNew.csv").then(
                   .style("stroke-width", 4.0)
                })
             .on('mouseout', function(d){
+                 if (line_m_clicked == false)
+              {
                 d3.select(this)
-                  .style("stroke-width", 1.5)
+                .style("stroke-width", 1.5)
+              }
             })
             .on('click', function(event, d){
               let gender = "M"
               const xCoor = d3.pointer(event)[0];
+              line_f_clicked = false
+              line_m_clicked = true
             update_map(xCoor, gender)
             updateScatterplotFromLineChart(xCoor, gender)
 
