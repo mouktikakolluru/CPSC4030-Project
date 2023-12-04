@@ -507,7 +507,9 @@ d3.csv("Visualization3Data.csv").then(
               //                  .attr("d", d => path(d)).attr(d.properties.NAME))
                                //console.log(mapGroup.selectAll(".state"))
 
-                    
+            d3.select("#DC").on('click', function(){
+              console.log("you selected DC")
+        })      
         })
 
     }  
