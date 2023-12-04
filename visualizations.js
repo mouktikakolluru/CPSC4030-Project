@@ -144,7 +144,6 @@ d3.csv("Visualization1DataNew.csv").then(
 d3.csv("Visualization2Data.csv").then(
 
     function(dataset){
-
        var dimensions = {
             width: 1400,
             height: 400,
@@ -452,7 +451,7 @@ d3.csv("Visualization3Data.csv").then(
                                .range(["lightgreen", "#355E3B"])
 
             var colorLegend = d3.legendColor()
-                                .labelFormat(d3.format(".0f"))
+                                .labelFormat(d3.format(".1f"))
                                 .scale(colorScale)
                                 .shapePadding(5)
                                 .shapeWidth(50)
@@ -466,11 +465,10 @@ d3.csv("Visualization3Data.csv").then(
                               .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
             
             var states = mapGroup.selectAll(".state")
-                               .attr("id", "states")
                                .data(mapdata.features)
                                .enter()
                                .append("path")
-                               //introduce attr
+                               //.attr("id", "states")
                                .attr("class", "state")
                                .attr("d", d => path(d))
                                .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
@@ -486,6 +484,17 @@ d3.csv("Visualization3Data.csv").then(
                                   .attr("stroke", "black")
                                   .style("stroke-width", 0.3)
                                })
+                               .on('click', function(d){
+                                  //updateScatterplotFromMap()
+                                  //console.log(#states.state
+
+                         })
+
+              // console.log(mapGroup.selectAll(".state").data(mapdata.features).append("path")
+              //                  .attr("d", d => path(d)).attr(d.properties.NAME))
+                               //console.log(mapGroup.selectAll(".state"))
+
+                    
         })
 
     }  
@@ -626,7 +635,11 @@ function update_map(xCoor, gender){
                                   .style("stroke-width", 0.3)
                                })
                                .on('click', function(d){
-                                  updateScatterplotFromMap()
+                                  //updateScatterplotFromMap()
+                      
+                                  d3.select(this)
+                                    .attr("fill", "black")
+
                                })
         })
     }  
@@ -634,15 +647,18 @@ function update_map(xCoor, gender){
   }
 
   function updateScatterplotFromLineChart(xCoor, gender){
-
-    d3.selectAll("circle")
-    .attr("stroke", null)  
-    .attr("r", 4)        
-    .style("stroke-width", 0.25)
+    //dataset.sort((a, b) => d3.descending(+a.combined_le_FM, +b.combined_le_FM));
+     d3.selectAll("circle")
+        .attr("stroke", null)  
+        .attr("r", 4)        
+        .style("stroke-width", 0.25)
 
          if (gender == "F"){
             d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4")
               .attr("fill-opacity", ".15")
+
+              d3.selectAll("#point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+              .attr("fill-opacity", "1")
 
             if (xCoor < 160) {
               
@@ -651,7 +667,8 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+          
+
             }
             else if (xCoor < 347 && xCoor >= 160) {
               d3.select("#point_f_q2")
@@ -659,7 +676,8 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+              
+               
             }
             else if (xCoor < 497 && xCoor >= 347) {
               d3.select("#point_f_q3")
@@ -667,7 +685,8 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+       
+             
             }
             else if (xCoor < 649 && xCoor >= 497) {
               d3.select("#point_f_q4")
@@ -675,7 +694,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+          
             }
           }
 
@@ -684,13 +703,17 @@ function update_map(xCoor, gender){
             d3.selectAll("#point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
               .attr("fill-opacity", ".15")
 
+            d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4")
+              .attr("fill-opacity", "1")
+
             if (xCoor < 160) {
                 d3.select("#point_m_q1")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+       
+                
             }
             else if (xCoor < 347 && xCoor >= 160) {
               d3.select("#point_m_q2")
@@ -698,7 +721,8 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+            
+            
             }
             else if (xCoor < 497 && xCoor >= 347) {
               d3.select("#point_m_q3")
@@ -706,7 +730,8 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+
+           
             }
             else if (xCoor < 649 && xCoor >= 497) {
               d3.select("#point_m_q4")
@@ -714,7 +739,7 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-                //.attr("fill-opacity", 1)
+      
             }
           }
 
@@ -722,6 +747,7 @@ function update_map(xCoor, gender){
   }
 
   function updateScatterplotFromMap(){
-
+      //st
+      //d3.selectAll()
   }
 
