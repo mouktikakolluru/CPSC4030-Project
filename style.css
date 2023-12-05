@@ -3,8 +3,11 @@ body{
 }
 
 .title {
-	font-size: 200%;
-	color: darkblue;
+  font-size: 200%;
+  color: maroon;
+  text-align: center;
+  display: block;
+  margin: auto;
 }
 
 .blue {
@@ -28,5 +31,6 @@ body{
 #DC { 
 	position: absolute; 
 	left: 1350px; 
-	top: 350px; 
+	top: 330px; 
   }
+
