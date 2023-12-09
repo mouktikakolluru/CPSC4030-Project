@@ -1,7 +1,23 @@
 let line_f_clicked = false
 let line_m_clicked = false
 
+let point_f_q1_clicked = false
+let point_f_q2_clicked = false
+let point_f_q3_clicked = false
+let point_f_q4_clicked = false
+let point_m_q1_clicked = false
+let point_m_q2_clicked = false
+let point_m_q3_clicked = false
+let point_m_q4_clicked = false
 
+var tip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0)
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "2px")
+            .style("border-radius", "5px")
+            .style("padding", "5px")
 
 d3.csv("Visualization1DataNew.csv").then(
 
@@ -38,7 +54,6 @@ d3.csv("Visualization1DataNew.csv").then(
             }
         )
             
-
         var yScale = d3.scaleLinear()
                        .domain([yMin, yMax])
                        .range([dimensions.height-dimensions.margin.bottom, dimensions.margin.top])
@@ -51,8 +66,45 @@ d3.csv("Visualization1DataNew.csv").then(
                         .x(d => xScale(+d.pctile))
                         .y(d => yScale(+d.le_agg_M))
 
-              
+        svg.append('rect')
+          .attr("id", "highlight_q1")
+          //.attr('fill', '#E5E4E2')
+          .attr('fill', 'yellow')
+          .attr('width', 146)
+          .attr('height', 295)
+          .attr("opacity", 0)
+          .attr('x', 50)
+          .attr('y', 9)
 
+        svg.append('rect')
+          .attr("id", "highlight_q2")
+          //.attr('fill', '#E5E4E2')
+          .attr('fill', 'yellow')
+          .attr('width', 151)
+          .attr('height', 295)
+          .attr("opacity", 0)
+          .attr('x', 196)
+          .attr('y', 9)
+        
+        svg.append('rect')
+          .attr("id", "highlight_q3")
+          //.attr('fill', '#E5E4E2')
+          .attr('fill', 'yellow')
+          .attr('width', 151)
+          .attr('height', 295)
+          .attr("opacity", 0)
+          .attr('x', 347)
+          .attr('y', 9)
+        
+        svg.append('rect')
+          .attr("id", "highlight_q4")
+          //.attr('fill', '#E5E4E2')
+          .attr('fill', 'yellow')
+          .attr('width', 151)
+          .attr('height', 295)
+          .attr("opacity", 0)
+          .attr('x', 498)
+          .attr('y', 9)
 
         svg.append("g")
             .attr("transform", `translate(0,${dimensions.height - dimensions.margin.bottom})`)
@@ -70,36 +122,77 @@ d3.csv("Visualization1DataNew.csv").then(
                .attr("fill", "currentColor")
                .attr("text-anchor", "start"));
 
+        const tooltip = d3.select("body")
+                          .append("div")
+                          .attr("class", "tooltip");
+
         svg.append("path")
             .attr("id", "line_f")
             .attr("fill", "none")
             .attr("stroke", "#FF7276")
             .attr("stroke-width", 1.5)
             .attr("d", line1(dataset))
-            .on('mouseover', function(d){
-                d3.select(this)
-                  .style("stroke-width", 4.0)
-                //tooltip.style("visibility", "visible")
-               })
-            .on('mouseout', function(d){
-                 if (line_f_clicked == false)
-                {
-                  d3.select(this)
-                  .style("stroke-width", 1.5)
-                }
-            })
-            .on('click', function (event, d) {
-                let gender = "F";
-                const xCoor = d3.pointer(event)[0];
-                update_map(xCoor, gender);
-                updateScatterplotFromLineChart(xCoor, gender);
-                d3.select(this)
-                  .style("stroke-width", 4.0);
-                d3.select("#line_m")
-                  .style("stroke-width", 1.5);
-              })
-    
+            .on('mouseover', function(event, d){
+              const xCoor = d3.pointer(event)[0];
+              const [x, y] = d3.pointer(event)
+              if (xCoor < 193)
+              {
+                tip.style("opacity", 1.0)
+                 .html("Female Quartile 1")
+                 .style("left", (x + 35) + "px")
+                 .style("top", (y + 80) + "px")
+              }
+              else if (xCoor < 344 && xCoor >= 193)
+              {
+                tip.style("opacity", 1.0)
+                .html("Female Quartile 2")
+                .style("left", (x + 35) + "px")
+                .style("top", (y + 80) + "px")
+              }
+              else if (xCoor < 497 && xCoor >= 344)
+              {
+                tip.style("opacity", 1.0)
+                .html("Female Quartile 3")
+                .style("left", (x + 35) + "px")
+                .style("top", (y + 80) + "px")
+              }
+              else if (xCoor < 649 && xCoor >= 497)
+              {
+                tip.style("opacity", 1.0)
+                 .html("Female Quartile 4")
+                 .style("left", (x + 35) + "px")
+                 .style("top", (y + 80) + "px")
+              }
 
+              d3.select(this)
+                .style("stroke-width", 4.0)
+               })
+
+            .on('mouseout', function(d){
+              tip.style("opacity", 0)
+
+                if (line_f_clicked == false)
+              {
+                d3.select(this)
+                .style("stroke-width", 1.5)
+              }
+            })
+            .on('click', function(event, d){
+              let gender = "F"
+              const xCoor = d3.pointer(event)[0];
+
+              line_f_clicked = true
+              line_m_clicked = false
+
+              update_map(xCoor, gender)
+              updateScatterplotFromLineChart(xCoor, gender)
+
+            d3.select(this)
+              .style("stroke-width", 4.0)
+            d3.select("#line_m")
+              .style("stroke-width", 1.5)
+            }
+          )
 
         svg.append("path")
             .attr("id", "line_m")
@@ -108,27 +201,59 @@ d3.csv("Visualization1DataNew.csv").then(
             .attr("stroke-width", 1.5)
             .attr("d", line2(dataset))
             .on('mouseover', function(d){
+              const xCoor = d3.pointer(event)[0];
+              const [x, y] = d3.pointer(event)
+              if (xCoor < 193)
+              {
+                tip.style("opacity", 1.0)
+                 .html("Male Quartile 1")
+                 .style("left", (x + 35) + "px")
+                 .style("top", (y + 80) + "px")
+              }
+              else if (xCoor < 344 && xCoor >= 193)
+              {
+                tip.style("opacity", 1.0)
+                .html("Male Quartile 2")
+                .style("left", (x + 35) + "px")
+                .style("top", (y + 80) + "px")
+              }
+              else if (xCoor < 497 && xCoor >= 344)
+              {
+                tip.style("opacity", 1.0)
+                .html("Male Quartile 3")
+                .style("left", (x + 35) + "px")
+                .style("top", (y + 80) + "px")
+              }
+              else if (xCoor < 649 && xCoor >= 497)
+              {
+                tip.style("opacity", 1.0)
+                 .html("Male Quartile 4")
+                 .style("left", (x + 35) + "px")
+                 .style("top", (y + 80) + "px")
+              }
                 d3.select(this)
                   .style("stroke-width", 4.0)
                })
             .on('mouseout', function(d){
+              tip.style("opacity", 0)
                  if (line_m_clicked == false)
               {
                 d3.select(this)
                 .style("stroke-width", 1.5)
               }
             })
-            .on('click', function (event, d) {
-              let gender = "M";
+            .on('click', function(event, d){
+              let gender = "M"
               const xCoor = d3.pointer(event)[0];
-              update_map(xCoor, gender);
-              updateScatterplotFromLineChart(xCoor, gender);
-              d3.select(this)
-                .style("stroke-width", 4.0);
-              d3.select("#line_f")
-                .style("stroke-width", 1.5);
+              line_f_clicked = false
+              line_m_clicked = true
+            update_map(xCoor, gender)
+            updateScatterplotFromLineChart(xCoor, gender)
+            d3.select(this)
+            .style("stroke-width", 4.0)
+          d3.select("#line_f")
+            .style("stroke-width", 1.5)
             })
-
 
             svg.append("text")
            .attr("class", "x label")
@@ -146,7 +271,7 @@ d3.csv("Visualization1DataNew.csv").then(
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
             .text("Average Lifespan [years]")
-            .attr("fill", "maroon")
+            .attr("fill", "maroon");
 
           svg.selectAll(".vertical-line")
             .data([25, 50, 75, 100])
@@ -159,11 +284,9 @@ d3.csv("Visualization1DataNew.csv").then(
             .attr("stroke", "gray")
             .attr("stroke-opacity", .3);
 
-
-          var legend = svg.append("g")
+  var legend = svg.append("g")
               .attr("class", "legend")
               .attr("transform", "translate(" + (dimensions.width - 630) + "," + 30 + ")");
-
 
           legend.append("rect")
               .attr("x", 0)
@@ -192,7 +315,6 @@ d3.csv("Visualization1DataNew.csv").then(
               .attr("dy", ".35em")
               .style("text-anchor", "start")
               .text("Male");
-
   }  
 )
 
@@ -209,7 +331,6 @@ d3.csv("Visualization2Data.csv").then(
                 left: 50
             }
         }
-
 
         var yAccessor = d => +d.le_agg_slope_q1_F
         var yAccessor1 = d => +d.le_agg_slope_q2_F
@@ -250,8 +371,7 @@ d3.csv("Visualization2Data.csv").then(
         var yScale = d3.scaleLinear()
                        .domain([yMin, yMax])
                        .range([dimensions.height - dimensions.margin.bottom, dimensions.margin.top])
-    
-
+                                
         var f_q1 = svg.append("g")
                       .attr("id", "point_f_q1")
                       .selectAll("circle")
@@ -262,35 +382,48 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor(d)))
                       .attr("r", 4)
                       .attr("fill", "#FF7276")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Female Quartile 1" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q1_F))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+
+                        if (point_f_q1_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_m_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            //console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'F';
-                          quartile = 1;
-                          updateLineChartFromScatterPlot(gender, quartile);
+                        gender = 'F'
+                        quartile = 1
+                        updateLineChartFromScatterPlot(gender, quartile)
 
-                          var stateAbbreviation = d.stateabbrv;
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
-
-
-
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
        var f_q2 = svg.append("g")
                       .attr("id", "point_f_q2")
@@ -302,33 +435,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor1(d)))
                       .attr("r", 4)
                       .attr("fill", "#FF7276")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Female Quartile 2" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q2_F))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_f_q2_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_m_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'F';
-                          quartile = 2;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'F'
+                        quartile = 2
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
-
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var f_q3 = svg.append("g")
                       .attr("id", "point_f_q3")
@@ -340,32 +486,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor2(d)))
                       .attr("r", 4)
                       .attr("fill", "#FF7276")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Female Quartile 3" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q3_F))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_f_q3_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_m_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'F';
-                          quartile = 3;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'F'
+                        quartile = 3
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var f_q4 = svg.append("g")
                       .attr("id", "point_f_q4")
@@ -377,32 +537,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor3(d)))
                       .attr("r", 4)
                       .attr("fill", "#FF7276")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Female Quartile 4" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q4_F))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_f_q4_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_m_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'F';
-                          quartile = 4;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'F'
+                        quartile = 4
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var m_q1 = svg.append("g")
                       .attr("id", "point_m_q1")
@@ -414,32 +588,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor4(d)))
                       .attr("r", 4)
                       .attr("fill", "#0096FF")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Male Quartile 1" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q1_M))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_m_q1_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_f_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'M';
-                          quartile = 1;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'M'
+                        quartile = 1
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var m_q2 = svg.append("g")
                       .attr("id", "point_m_q2")
@@ -451,32 +639,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor5(d)))
                       .attr("r", 4)
                       .attr("fill", "#0096FF")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Male Quartile 2" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q2_M))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_m_q2_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_f_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'M';
-                          quartile = 2;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'M'
+                        quartile = 2
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var m_q3 = svg.append("g")
                       .attr("id", "point_m_q3")
@@ -488,33 +690,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor6(d)))
                       .attr("r", 4)
                       .attr("fill", "#0096FF")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Male Quartile 3" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q3_M))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_m_q3_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_f_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'M';
-                          quartile = 3;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'M'
+                        quartile = 3
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
-
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var m_q4 = svg.append("g")
                       .attr("id", "point_m_q4")
@@ -526,32 +741,46 @@ d3.csv("Visualization2Data.csv").then(
                       .attr("cy", d => yScale(yAccessor7(d)))
                       .attr("r", 4)
                       .attr("fill", "#0096FF")
-                      .attr("stroke", "black")
+                      .attr("stroke", "#36454F")
                       .style("stroke-width", 0.25)
                       .style("transform", "translateX(13px)")
-                      .on('mouseover', function(d){
+                      .on('mouseover', function(event, d){
+                        const [x, y] = d3.pointer(event)
+                        tip.style("opacity", 1.0)
+                          .html(d.statename + " Male Quartile 4" + "<br/> Change in Life Expectancy: " + d3.format("0.3f")(d.le_agg_slope_q4_M))
+                          .style("left", (x + 40) + "px")
+                          .style("top", (y + 400) + "px")
+
                         d3.select(this)
-                          .attr("stroke", "black")
-                          .style("stroke-width", 2.0)
-                          .attr("r", 6)
+                          .attr("stroke", "#36454F")
+                          .attr("r", 5.5)
+                          .style("stroke-width", "1.5")
                        })
                        .on('mouseout', function(d){
-                        d3.select(this)
-                          .attr("stroke", "black")
+                        tip.style("opacity", 0)
+                        if (point_m_q4_clicked == false)
+                        {
+                          d3.select(this)
+                          .attr("stroke", "#36454F")
                           .style("stroke-width", 0.25)
                           .attr("r", 4)
+                        }
+                        if (line_f_clicked == true)
+                        { d3.select(this)
+                            .attr("stroke", "white")
+                            console.log("working")
+                        }
                        })
                        .on('click', function(event, d){
-                          gender = 'M';
-                          quartile = 4;
-                          updateLineChartFromScatterPlot(gender, quartile);
-                          
-                          var stateAbbreviation = d.stateabbrv;
+                        gender = 'M'
+                        quartile = 4
+                        updateLineChartFromScatterPlot(gender, quartile)
+                        var stateAbbreviation = d.stateabbrv;
 
-                          if (stateAbbreviation) {
-                              highlightState(stateAbbreviation, dataset);
-                          }
-                      })
+                        if (stateAbbreviation) {
+                            highlightState(stateAbbreviation, dataset);
+                        }
+                       })
 
         var xAxisGen = d3.axisBottom().scale(xScale)
 
@@ -574,7 +803,6 @@ d3.csv("Visualization2Data.csv").then(
         .text("State Abbreviation")
         .attr("fill", "maroon")
 
-    
       svg.append("text")
           .attr("class", "y label")
           .attr("text-anchor", "middle")
@@ -584,145 +812,217 @@ d3.csv("Visualization2Data.csv").then(
           .attr("transform", "rotate(-90)")
           .text("Change in Life Expectancy")
           .attr("fill", "maroon")
+    
+      var legendScatterplot = svg.append("g")
+                                .attr("class", "legend")
+                                .attr("transform", "translate(" + (dimensions.width - 1330) + "," + 30 + ")");
 
+      legendScatterplot.append("rect")
+                      .attr("x", 0)
+                      .attr("y", 0)
+                      .attr("width", 18)
+                      .attr("height", 18)
+                      .attr("fill", "#FF7276"); 
 
+      legendScatterplot.append("rect")
+                      .attr("x", 0)
+                      .attr("y", 30)
+                      .attr("width", 18)
+                      .attr("height", 18)
+                      .attr("fill", "#0096FF");
 
-        var legendScatterplot = svg.append("g")
-              .attr("class", "legend")
-              .attr("transform", "translate(" + (dimensions.width - 1330) + "," + 30 + ")");
+      legendScatterplot.append("text")
+                      .attr("x", 25)
+                      .attr("y", 9)
+                      .attr("dy", ".35em")
+                      .style("text-anchor", "start")
+                      .text("Female");
 
-          legendScatterplot.append("rect")
-              .attr("x", 0)
-              .attr("y", 0)
-              .attr("width", 18)
-              .attr("height", 18)
-              .attr("fill", "#FF7276"); 
-
-          legendScatterplot.append("rect")
-              .attr("x", 0)
-              .attr("y", 30)
-              .attr("width", 18)
-              .attr("height", 18)
-              .attr("fill", "#0096FF");
-
-          legendScatterplot.append("text")
-              .attr("x", 25)
-              .attr("y", 9)
-              .attr("dy", ".35em")
-              .style("text-anchor", "start")
-              .text("Female");
-
-          legendScatterplot.append("text")
-              .attr("x", 25)
-              .attr("y", 39)
-              .attr("dy", ".35em")
-              .style("text-anchor", "start")
-              .text("Male");
+      legendScatterplot.append("text")
+                      .attr("x", 25)
+                      .attr("y", 39)
+                      .attr("dy", ".35em")
+                      .style("text-anchor", "start")
+                      .text("Male");  
     }  
 )
 
-d3.csv("Visualization3Data.csv").then(function(dataset) {
+d3.csv("Visualization3Data.csv").then(
 
-    d3.json("us_states.json").then(function(mapdata) {
+    function(dataset){
 
-        var state_le = {};
-        dataset.forEach(d => {
-            state_le[d["statename"]] = +d["combined_le_FM"];
-        });
+        d3.json("us_states.json").then(function(mapdata){
 
-        var w = 700;
-        var h = 350;
+            var state_le = {}
+            dataset.forEach(d => 
+                {state_le[d["statename"]] = +d["combined_le_FM"]})
 
-        var svg = d3.select("#map")
-            .attr("width", w)
-            .attr("height", h);
+            var w = 700;
+            var h = 350;
 
-        var projection = d3.geoAlbersUsa()
-            .translate([w / 3, h / 2])
-            .scale([w]);
+            var svg = d3.select("#map")
+                        .attr("width", w)
+                        .attr("height", h)
+    
+            var projection = d3.geoAlbersUsa()  
+                               .translate([w/3 , h/2])
+                               .scale([w]);  
+            
+            var path = d3.geoPath().projection(projection);
 
-        var path = d3.geoPath().projection(projection);
+            var colorScale = d3.scaleLinear()
+                               .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
+                               .range(["lightgreen", "#355E3B"])
 
-        var colorScale = d3.scaleLinear()
-            .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
-            .range(["lightgreen", "#355E3B"]);
+            var colorLegend = d3.legendColor()
+                                .labelFormat(d3.format(".1f"))
+                                .scale(colorScale)
+                                .shapePadding(0)
+                                .shapeWidth(50)
+                                .shapeHeight(20)
+                                .labelOffset(12);
+             svg.append("g")
+                .attr("transform", "translate(15, 50)")
+                .call(colorLegend)
+                .append("text")
+                .attr("x", -15)
+                .attr("y", -20)
+                .attr("dy", ".35em")
+                .style("text-anchor", "start")
+                .text("Average Life Expectancy")  
 
-        var colorLegend = d3.legendColor()
-            .labelFormat(d3.format(".1f"))
-            .scale(colorScale)
-            .shapePadding(5)
-            .shapeWidth(50)
-            .shapeHeight(20)
-            .labelOffset(12);
-        svg.append("g")
-            .attr("transform", "translate(10, 10)")
-            .call(colorLegend);
+            var mapGroup = svg.append("g")
+                              .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
 
-        var mapGroup = svg.append("g")
-            .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
+            var selectedState = null;
 
-        var selectedState = null;
+          
+            
+            var states = mapGroup.selectAll(".state")
+                               .data(mapdata.features)
+                               .enter()
+                               .append("path")
+                               .attr("class", "state")
+                               .attr("d", d => path(d))
+                               .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
+                               .attr("stroke", "black")
+                               .style("stroke-width", 0.3)
+                               .attr("stateNameAttr", d => d.properties.NAME)
+                               .on('mouseover', function(event, d){
+                                const [x, y] = d3.pointer(event)
+                                tip.style("opacity", 1.0)
+                                  .html("State: " + d3.select(this).attr("stateNameAttr") + "<br/> Life Expectancy: " + d3.format(".1f")(state_le[d3.select(this).attr("stateNameAttr")]))
+                                  .style("left", (x + 725) + "px")
+                                  .style("top", (y + 75) + "px")        
 
-        var states = mapGroup.selectAll(".state")
-            .data(mapdata.features)
-            .enter()
-            .append("path")
-            .attr("class", "state")
-            .attr("d", d => path(d))
-            .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
-            .attr("stroke", "black")
-            .style("stroke-width", 0.3)
-            .attr("stateNameAttr", d => d.properties.NAME)
-            .on('mouseover', function() {
-                if (selectedState !== d3.select(this).attr("stateNameAttr")) {
-                    d3.select(this)
-                        .attr("stroke", "black")
-                        .style("stroke-width", 2.0);
-                }
+                                if (selectedState !== d3.select(this).attr("stateNameAttr")) {
+                                  d3.select(this)
+                                      .attr("stroke", "black")
+                                      .style("stroke-width", 2.0);
+                              }
+                               })
+                               .on('mouseout', function(d){
+                                tip.style("opacity", 0)
+                                if (selectedState !== d3.select(this).attr("stateNameAttr")) {
+                                  d3.select(this)
+                                      .attr("stroke", "black")
+                                      .style("stroke-width", 0.3);
+                              }
+                               })
+                               .on('click', function(d){
+                                var stateName = d3.select(this).attr("stateNameAttr");
+
+                                if (selectedState !== null) {
+                                    var previousState = d3.select(`[stateNameAttr="${selectedState}"]`);
+                                    previousState.attr("stroke", "black").style("stroke-width", 0.3);
+                                }
+
+                                selectedState = stateName;
+                              function updateScatterplotFromMap(stateName) {
+                                  var filteredData = dataset.filter(d => d["statename"] === stateName);
+                                    console.log("Filtered Data:", filteredData);
+
+                                    d3.select("#scatterplot")
+                                        .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+                                        .selectAll("circle")
+                                        .attr("fill-opacity", 0)
+                                        .attr("stroke-opacity", 0)
+
+                                    d3.select("#scatterplot")
+                                        .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+                                        .selectAll("circle")
+                                        .filter(function (d) {
+                                            return d.statename === stateName;
+                                        })
+                                        .attr("fill-opacity", 1)
+                                        .attr("stroke-opacity", 1)
+                              }
+
+                              console.log("u clicked on:", stateName);
+                              updateScatterplotFromMap(stateName);
+
+                              d3.select(this)
+                                  .attr("stroke", "yellow")
+                                  .style("stroke-width", 2.0);
+
+                              d3.select("#DC")
+              .on('mouseover', function(event, d){
+                d3.select(this).attr("stateNameAttr", "District Of Columbia")
+                const [x, y] = d3.pointer(event)
+                tip.style("opacity", 1.0)
+                  .html("State: " + d3.select(this).attr("stateNameAttr") + "<br/> Life Expectancy: " + d3.format(".1f")(state_le[d3.select(this).attr("stateNameAttr")]))
+                  .style("left", (x + 1250) + "px")
+                  .style("top", (y + 250) + "px")     
+              })   
+              .on('mouseout', function(event, d){
+                tip.style("opacity", 0)
+              })          
+              .on('click', function(){
+                stateName = "District Of Columbia";
+                updateScatterplotFromMap(stateName);})  
+
             })
-            .on('mouseout', function() {
-                if (selectedState !== d3.select(this).attr("stateNameAttr")) {
-                    d3.select(this)
-                        .attr("stroke", "black")
-                        .style("stroke-width", 0.3);
-                }
-            })
-            .on('click', function() {
-                var stateName = d3.select(this).attr("stateNameAttr");
 
-                if (selectedState !== null) {
-                    var previousState = d3.select(`[stateNameAttr="${selectedState}"]`);
-                    previousState.attr("stroke", "black").style("stroke-width", 0.3);
-                }
+                               function updateScatterplotFromDC(stateName) {
+                                stateName = "District Of Columbia";
+              var filteredData = dataset.filter(d => d["statename"] === stateName);
+                                    console.log("Filtered Data:", filteredData);
 
-                selectedState = stateName;
+                                    d3.select("#scatterplot")
+                                        .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+                                        .selectAll("circle")
+                                        .attr("fill-opacity", 0)
+                                        .attr("stroke-opacity", 0)
 
-                function updateScatterplotFromMap(stateName) {
-                    var filteredData = dataset.filter(d => d["statename"] === stateName);
-                    console.log("Filtered Data:", filteredData);
-                     d3.select("#scatterplot")
-                       .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
-                       .selectAll("circle")
-                        .data(filteredData, d => d.statename)
-                        .exit()
-                        .remove()
-                }
 
-                console.log("u clicked on:", stateName);
-                updateScatterplotFromMap(stateName);
-
-                d3.select(this)
-                    .attr("stroke", "yellow")
-                    .style("stroke-width", 2.0);
-            });
-
-        
-
-        d3.select("#DC").on('click', function() {
-            console.log("you selected DC")
+                                    d3.select("#scatterplot")
+                                        .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+                                        .selectAll("circle")
+                                        .filter(function (d) {
+                                            return d.statename === stateName;
+                                        })
+                                        .attr("fill-opacity", 1)
+                                        .attr("stroke-opacity", 1)
+              }
+            
+              d3.select("#DC")
+              .on('mouseover', function(event, d){
+                d3.select(this).attr("stateNameAttr", "District Of Columbia")
+                const [x, y] = d3.pointer(event)
+                tip.style("opacity", 1.0)
+                  .html("State: " + d3.select(this).attr("stateNameAttr") + "<br/> Life Expectancy: " + d3.format(".1f")(state_le[d3.select(this).attr("stateNameAttr")]))
+                  .style("left", (x + 1250) + "px")
+                  .style("top", (y + 250) + "px")     
+              })   
+              .on('mouseout', function(event, d){
+                tip.style("opacity", 0)
+              })          
+              .on('click', function(){
+                stateName = "District Of Columbia";
+                updateScatterplotFromDC(stateName);})    
         })
-    });
-});
+    }  
+)
 
 
 function update_map(xCoor, gender){
@@ -737,19 +1037,19 @@ function update_map(xCoor, gender){
           var titleText = "Life Expectancy by State";
 
           if (gender == "F"){
-            if (xCoor < 160) {
+            if (xCoor < 193) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q1_F"]}) 
 
             titleText = "Life Expectancy for Q1 in Females";
             }
-            else if (xCoor < 347 && xCoor >= 160) {
+            else if (xCoor < 344 && xCoor >= 193) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q2_F"]}) 
 
             titleText = "Life Expectancy for Q2 in Females";
             }
-            else if (xCoor < 497 && xCoor >= 347) {
+            else if (xCoor < 497 && xCoor >= 344) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q3_F"]}) 
 
@@ -764,19 +1064,19 @@ function update_map(xCoor, gender){
           }
 
           if (gender == "M"){
-            if (xCoor < 160) {
+            if (xCoor < 193) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q1_M"]}) 
 
             titleText = "Life Expectancy for Q1 in Males";
             }
-            else if (xCoor < 347 && xCoor >= 160) {
+            else if (xCoor < 344 && xCoor >= 193) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q2_M"]}) 
 
             titleText = "Life Expectancy for Q2 in Males";
             }
-            else if (xCoor < 497 && xCoor >= 347) {
+            else if (xCoor < 497 && xCoor >= 344) {
               dataset.forEach(d => 
                 {state_le[d["statename"]] = +d["le_agg_q3_M"]}) 
 
@@ -795,7 +1095,7 @@ function update_map(xCoor, gender){
   
             var w = 700;
             var h = 350;
-  
+
             var svg = d3.select("#map")
                         .attr("width", w)
                         .attr("height", h)
@@ -805,7 +1105,7 @@ function update_map(xCoor, gender){
                                .scale([w]);  
             
             var path = d3.geoPath().projection(projection);
-  
+
             if (gender == "F"){
               var colorScale = d3.scaleLinear()
                                  .domain([d3.min(Object.values(state_le)), d3.max(Object.values(state_le))])
@@ -820,83 +1120,125 @@ function update_map(xCoor, gender){
 
             svg.append('rect')
                .attr('x', 0)
-               .attr('y', 0)
-               .attr('width', 90)
-               .attr('height', 300)
+               .attr('y', 40)
+               .attr('width', 120)
+               .attr('height', 200)
                .attr('fill', 'white');
-            
+
             var colorLegend = d3.legendColor()
-                                .labelFormat(d3.format(".0f"))
+                                .labelFormat(d3.format(".1f"))
                                 .scale(colorScale)
-                                .shapePadding(5)
+                                .shapePadding(0)
                                 .shapeWidth(50)
                                 .shapeHeight(20)
                                 .labelOffset(12);
-            svg.append("g")
-                .attr("transform", "translate(10, 10)")
-                .call(colorLegend);
-  
+             svg.append("g")
+                .attr("transform", "translate(15, 50)")
+                .call(colorLegend)
+                .append("text")
+                .attr("x", -15)
+                .attr("y", -20)
+                .attr("dy", ".35em")
+                .style("text-anchor", "start")
+                .text("Average Life Expectancy")  
+
             var mapGroup = svg.append("g")
                               .attr("transform", "translate(" + w / 4 + "," + h / 300 + ")");
 
             var selectedState = null;
+
+          
             
             var states = mapGroup.selectAll(".state")
-                              .data(mapdata.features)
-                              .enter()
-                              .append("path")
-                              .attr("class", "state")
-                              .attr("d", d => path(d))
-                              .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
-                              .attr("stroke", "black")
-                              .style("stroke-width", 0.3)
-                              .attr("stateNameAttr", d => d.properties.NAME)
-                              .on('mouseover', function() {
-                                  if (selectedState !== d3.select(this).attr("stateNameAttr")) {
-                                      d3.select(this)
-                                          .attr("stroke", "black")
-                                          .style("stroke-width", 2.0);
-                                  }
-                              })
-                               .on('click', function() {
-                                  var stateName = d3.select(this).attr("stateNameAttr");
+                               .data(mapdata.features)
+                               .enter()
+                               .append("path")
+                               .attr("class", "state")
+                               .attr("d", d => path(d))
+                               .attr("fill", d => colorScale(+state_le[d.properties.NAME]))
+                               .attr("stroke", "black")
+                               .style("stroke-width", 0.3)
+                               .attr("stateNameAttr", d => d.properties.NAME)
+                               .on('mouseover', function(event, d){
+                                const [x, y] = d3.pointer(event)
+                                tip.style("opacity", 1.0)
+                                  .html("State: " + d3.select(this).attr("stateNameAttr") + "<br/> Life Expectancy: " + d3.format(".1f")(state_le[d3.select(this).attr("stateNameAttr")]))
+                                  .style("left", (x + 725) + "px")
+                                  .style("top", (y + 75) + "px")        
 
-                                  if (selectedState !== null) {
-                                      var previousState = d3.select(`[stateNameAttr="${selectedState}"]`);
-                                      previousState.attr("stroke", "black").style("stroke-width", 0.3);
-                                  }
+                                if (selectedState !== d3.select(this).attr("stateNameAttr")) {
+                                  d3.select(this)
+                                      .attr("stroke", "black")
+                                      .style("stroke-width", 2.0);
+                              }
+                               })
+                               .on('mouseout', function(d){
+                                tip.style("opacity", 0)
+                                if (selectedState !== d3.select(this).attr("stateNameAttr")) {
+                                  d3.select(this)
+                                      .attr("stroke", "black")
+                                      .style("stroke-width", 0.3);
+                              }
+                               })
+                               .on('click', function(d){
+                                var stateName = d3.select(this).attr("stateNameAttr");
 
-                                  selectedState = stateName;
+                                if (selectedState !== null) {
+                                    var previousState = d3.select(`[stateNameAttr="${selectedState}"]`);
+                                    previousState.attr("stroke", "black").style("stroke-width", 0.3);
+                                }
 
-                            function updateScatterplotFromMap(stateName) {
-                                var filteredData = dataset.filter(d => d["statename"] === stateName);
-                                console.log("Filtered Data:", filteredData);
-                                 d3.select("#scatterplot")
-                                   .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
-                                   .selectAll("circle")
-                                    .data(filteredData, d => d.statename)
-                                    .exit()
-                                    .remove()
-                            }
+                                selectedState = stateName;
+                              function updateScatterplotFromMap(stateName) {
+                                  var filteredData = dataset.filter(d => d["statename"] === stateName);
+                                    console.log("Filtered Data:", filteredData);
 
-                            console.log("u clicked on:", stateName);
-                            updateScatterplotFromMap(stateName);
+                                    d3.select("#scatterplot")
+                                        .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+                                        .selectAll("circle")
+                                        .attr("fill-opacity", 0)
+                                        .attr("stroke-opacity", 0)
 
-                            d3.select(this)
-                                .attr("stroke", "yellow")
-                                .style("stroke-width", 2.0);
+                                    d3.select("#scatterplot")
+                                        .selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4, #point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
+                                        .selectAll("circle")
+                                        .filter(function (d) {
+                                            return d.statename === stateName;
+                                        })
+                                        .attr("fill-opacity", 1)
+                                        .attr("stroke-opacity", 1)
+                              }
 
-                            // function highlightState(){
+                              console.log("u clicked on:", stateName);
+                              updateScatterplotFromMap(stateName);
 
-                            // }
-            });                    
+                              d3.select(this)
+                                  .attr("stroke", "yellow")
+                                  .style("stroke-width", 2.0);
+
+                              d3.select("#DC")
+              .on('mouseover', function(event, d){
+                d3.select(this).attr("stateNameAttr", "District Of Columbia")
+                const [x, y] = d3.pointer(event)
+                tip.style("opacity", 1.0)
+                  .html("State: " + d3.select(this).attr("stateNameAttr") + "<br/> Life Expectancy: " + d3.format(".1f")(state_le[d3.select(this).attr("stateNameAttr")]))
+                  .style("left", (x + 1250) + "px")
+                  .style("top", (y + 250) + "px")     
+              })   
+              .on('mouseout', function(event, d){
+                tip.style("opacity", 0)
+              })          
+              .on('click', function(){
+                stateName = "District Of Columbia";
+                updateScatterplotFromMap(stateName);}) 
+          })
         })
     }  
-
   )
   }
 
   function updateScatterplotFromLineChart(xCoor, gender){
+    console.log(xCoor)
      d3.selectAll("circle")
         .attr("stroke", null)  
         .attr("r", 4)        
@@ -909,33 +1251,67 @@ function update_map(xCoor, gender){
               d3.selectAll("#point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
               .attr("fill-opacity", "1")
 
-            if (xCoor < 160) {
+            point_m_q1_clicked = false
+            point_m_q2_clicked = false
+            point_m_q3_clicked = false
+            point_m_q4_clicked = false
+
+            if (xCoor < 193) {
               
               d3.select("#point_f_q1")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-          
+
+              d3.select("#highlight_q1")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q4")
+                .attr("opacity", 0)
+
+              point_f_q1_clicked = true
+             
+              point_f_q2_clicked = false
+              point_f_q3_clicked = false
+              point_f_q4_clicked = false
 
             }
-            else if (xCoor < 347 && xCoor >= 160) {
+            else if (xCoor < 344 && xCoor >= 193) {
               d3.select("#point_f_q2")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
+              d3.select("#highlight_q2")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q1, #highlight_q3, #highlight_q4")
+                .attr("opacity", 0)
               
+                point_f_q2_clicked = true
+
+                point_f_q1_clicked = false
+                point_f_q3_clicked = false
+                point_f_q4_clicked = false
                
             }
-            else if (xCoor < 497 && xCoor >= 347) {
+            else if (xCoor < 497 && xCoor >= 344) {
               d3.select("#point_f_q3")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
-       
-             
+
+              d3.select("#highlight_q3")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q2, #highlight_q1, #highlight_q4")
+                .attr("opacity", 0)
+              
+              point_f_q3_clicked = true
+
+              point_f_q1_clicked = false
+              point_f_q2_clicked = false
+              point_f_q4_clicked = false
             }
             else if (xCoor < 649 && xCoor >= 497) {
               d3.select("#point_f_q4")
@@ -943,10 +1319,19 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
+              d3.select("#highlight_q4")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q1")
+                .attr("opacity", 0)
           
+                point_f_q4_clicked = true
+
+                point_f_q1_clicked = false
+                point_f_q2_clicked = false
+                point_f_q3_clicked = false
             }
           }
-
 
           if (gender == "M"){
             d3.selectAll("#point_f_q1, #point_f_q2, #point_f_q3, #point_f_q4")
@@ -955,32 +1340,64 @@ function update_map(xCoor, gender){
             d3.selectAll("#point_m_q1, #point_m_q2, #point_m_q3, #point_m_q4")
               .attr("fill-opacity", "1")
 
-            if (xCoor < 160) {
+            point_f_q1_clicked = false
+            point_f_q2_clicked = false
+            point_f_q3_clicked = false
+            point_f_q4_clicked = false
+
+            if (xCoor < 193) {
                 d3.select("#point_m_q1")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
+              d3.select("#highlight_q1")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q4")
+                .attr("opacity", 0)
        
-                
+                point_m_q1_clicked = true
+
+                point_m_q2_clicked = false
+                point_m_q3_clicked = false
+                point_m_q4_clicked = false
             }
-            else if (xCoor < 347 && xCoor >= 160) {
+            else if (xCoor < 344 && xCoor >= 193) {
               d3.select("#point_m_q2")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
+              d3.select("#highlight_q2")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q1, #highlight_q3, #highlight_q4")
+                .attr("opacity", 0)
             
-            
+                point_m_q2_clicked = true
+
+                point_m_q1_clicked = false
+                point_m_q3_clicked = false
+                point_m_q4_clicked = false
             }
-            else if (xCoor < 497 && xCoor >= 347) {
+            else if (xCoor < 497 && xCoor >= 344) {
               d3.select("#point_m_q3")
                 .selectAll("circle")
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
 
-           
+              d3.select("#highlight_q3")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q2, #highlight_q4, #highlight_q1")
+                .attr("opacity", 0)
+
+                point_m_q3_clicked = true
+
+                point_m_q1_clicked = false
+                point_m_q2_clicked = false
+                point_m_q4_clicked = false
             }
             else if (xCoor < 649 && xCoor >= 497) {
               d3.select("#point_m_q4")
@@ -988,41 +1405,56 @@ function update_map(xCoor, gender){
                 .attr("stroke", "#36454F")
                 .attr("r", 5.5)
                 .style("stroke-width", "1.5")
+
+              d3.select("#highlight_q4")
+                .attr("opacity", 0.25)
+              d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q1")
+                .attr("opacity", 0)
       
+                point_m_q4_clicked = true
+
+                point_m_q1_clicked = false
+                point_m_q2_clicked = false
+                point_m_q3_clicked = false
             }
           }
-
-      
   }
 
   function updateLineChartFromScatterPlot(gender, quartile){
-
-
     if (gender == 'F'){
-
       d3.select("#line_f")
-      .style("stroke-width", 4.0)
+        .style("stroke-width", 4.0)
       
       d3.select("#line_m")
         .style("stroke-width", 1.5)
-
-
-      // if (quartile == 1)
-      // {
-      //   d3.select("#line_f")
-      // }
-      // if (quartile == 2)
-      // {
-      //   d3.select("#line_f")
-      // }
-      // if (quartile == 3)
-      // {
-      //   d3.select("#line_f")
-      // }
-      // if (quartile == 4)
-      // {
-      //   d3.select("#line_f")
-      // }
+      if (quartile == 1)
+      {
+        d3.select("#highlight_q1")
+          .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q4")
+          .attr("opacity", 0)
+      }
+      if (quartile == 2)
+      {
+        d3.select("#highlight_q2")
+                .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q1, #highlight_q3, #highlight_q4")
+                .attr("opacity", 0)
+      }
+      if (quartile == 3)
+      {
+        d3.select("#highlight_q3")
+                .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q2, #highlight_q4, #highlight_q1")
+                .attr("opacity", 0)
+      }
+      if (quartile == 4)
+      {
+        d3.select("#highlight_q4")
+          .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q1")
+          .attr("opacity", 0)
+      }
 
     }
 
@@ -1032,30 +1464,41 @@ function update_map(xCoor, gender){
 
       d3.select("#line_f")
         .style("stroke-width", 1.5)
-      // if (quartile == 1)
-      // {
-      //   d3.select("#line_m")
-      // }
-      // if (quartile == 2)
-      // {
-      //   d3.select("#line_m")
-      // }
-      // if (quartile == 3)
-      // {
-      //   d3.select("#line_m")
-      // }
-      // if (quartile == 4)
-      // {
-      //   d3.select("#line_m")
-      // }
+      if (quartile == 1)
+      {
+        d3.select("#highlight_q1")
+          .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q4")
+          .attr("opacity", 0)
+      }
+      if (quartile == 2)
+      {
+        d3.select("#highlight_q2")
+                .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q1, #highlight_q3, #highlight_q4")
+                .attr("opacity", 0)
+      }
+      if (quartile == 3)
+      {
+        d3.select("#highlight_q3")
+          .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q2, #highlight_q4, #highlight_q1")
+          .attr("opacity", 0)
+      }
+      if (quartile == 4)
+      {
+        d3.select("#highlight_q4")
+          .attr("opacity", 0.25)
+        d3.selectAll("#highlight_q2, #highlight_q3, #highlight_q1")
+          .attr("opacity", 0)
+      }
     }
   }
 
-//
 var selectedState = null; 
 
 function highlightState(stateAbbreviation, dataset) {
-
+    
     var stateData = dataset.find(d => d["stateabbrv"] === stateAbbreviation);
 
     var stateName = stateData["statename"];
@@ -1066,15 +1509,8 @@ function highlightState(stateAbbreviation, dataset) {
     }
 
     var currentState = d3.select(`[stateNameAttr="${stateName}"]`);
-    currentState.attr("stroke", "yellow").style("stroke-width", 4.0);
+    currentState.attr("stroke", "yellow").style("stroke-width", 4.0);//.raise();
+    //currentState.raise();
 
     selectedState = stateName;
 }
-
-
-
-
-
-
-
-

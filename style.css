@@ -30,7 +30,15 @@ body{
 
 #DC { 
 	position: absolute; 
-	left: 1350px; 
-	top: 330px; 
+	left: 1330px; 
+	top: 220px; 
+  }
+.tooltip {
+	position: absolute;
+	pointer-events: none;
+	background: white;
+	opacity: 0.25;
+	stroke: black;
+	color: black;
   }
 
