@@ -1026,6 +1026,7 @@ d3.csv("Visualization3Data.csv").then(
 
 
 function update_map(xCoor, gender){
+d3.selectAll(".state").remove()
   
   d3.csv("Visualization3Data.csv").then(
   
